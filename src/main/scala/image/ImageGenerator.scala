@@ -5,6 +5,9 @@ import java.awt.{Color, Font}
 import java.io.File
 
 import javax.imageio.ImageIO
+import zio.ZIO
+
+import scala.util.Try
 
 object ImageGenerator {
   val scalaIORed = 0xbc1321
@@ -36,7 +39,9 @@ object ImageGenerator {
     g.setFont(new Font(timesRoman, Font.PLAIN, 24))
     g.drawString(imageDetails.speakerName, 50, 150)
 
-    ImageIO.write(img, "png", new File(s"/Users/jeandetoeuf/Desktop/accepted/${imageDetails.speakerName}.png"))
+    ZIO.fromTry(
+      Try(ImageIO.write(img, "png", new File(s"/Users/jeandetoeuf/Desktop/accepted/${imageDetails.speakerName}.png")))
+    )
   }
 
 }

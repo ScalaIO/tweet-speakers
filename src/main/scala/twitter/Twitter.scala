@@ -3,13 +3,13 @@ package twitter
 import java.net.URL
 
 import com.danielasfregola.twitter4s.TwitterRestClient
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import zio.ZIO
 
 object Twitter {
   val restClient = TwitterRestClient()
 
   def sendMediaTweetWithImage(message: String, imagePath: String): Any = {
+    import scala.concurrent.ExecutionContext.Implicits.global
     for {
       upload <- restClient.uploadMediaFromPath(imagePath)
       tweet <- restClient.createTweet(status = message, media_ids = Seq(upload.media_id))
@@ -17,7 +17,13 @@ object Twitter {
   }
 
   def profilePicture(name: String) = {
-    restClient.user(name).map(rUser => rUser.data.profile_image_url.default).map(new URL(_))
+    ZIO.fromFuture(
+      executionContext =>
+        restClient
+          .user(name)
+          .map(rUser => rUser.data.profile_image_url.default)(executionContext)
+          .map(new URL(_))(executionContext)
+    )
   }
 
 }

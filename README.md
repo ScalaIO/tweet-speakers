@@ -5,8 +5,9 @@ Script to publish to twitter speaker annoucements for ScalaIO
 ## Dependencies
  
 - [twitter4s](https://github.com/DanielaSfregola/twitter4s)
-- Circe
-- Sttp 
+- [Circe](https://circe.github.io/circe/)
+- [Sttp](https://github.com/softwaremill/sttp) 
+- [ZIO](https://zio.dev) 
 
 
 ## Usage
