@@ -1,3 +1,5 @@
+package submission
+
 import com.softwaremill.sttp._
 
 case class Talk(title: String)

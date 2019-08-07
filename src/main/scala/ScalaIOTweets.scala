@@ -1,3 +1,7 @@
+import image.{ImageDetails, ImageGenerator}
+import submission.Papercall
+import twitter.Twitter
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object ScalaIOTweets extends App {
@@ -13,6 +17,10 @@ object ScalaIOTweets extends App {
                 .map(
                   profilePictureURL => ImageDetails(submission.talk.title, submission.profile.name, profilePictureURL)
                 )
+                .map(details => {
+                  println(details)
+                  details
+                })
                 .foreach(ImageGenerator.of)
         )
     )

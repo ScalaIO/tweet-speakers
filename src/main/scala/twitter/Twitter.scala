@@ -1,5 +1,9 @@
+package twitter
+
 import java.net.URL
+
 import com.danielasfregola.twitter4s.TwitterRestClient
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object Twitter {
@@ -13,7 +17,7 @@ object Twitter {
   }
 
   def profilePicture(name: String) = {
-    restClient.user(name).map(rUser => rUser.data.profile_image_url.bigger).map(new URL(_))
+    restClient.user(name).map(rUser => rUser.data.profile_image_url.default).map(new URL(_))
   }
 
 }
