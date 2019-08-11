@@ -1,7 +1,7 @@
 package image
 
 import java.awt.image.BufferedImage
-import java.awt.{Color, Font}
+import java.awt.{Color, Font, Graphics2D, RenderingHints}
 import java.io.File
 
 import javax.imageio.ImageIO
@@ -13,14 +13,16 @@ object ImageGenerator {
   val scalaIORed = 0xbc1321
 
   def of(imageDetails: ImageDetails) = {
-    val h, w = 500
-    val timesRoman = "TimesRoman"
+    val h = 267 * 3
+    val w = 507 * 3
+    val timesRoman = "Arial Black"
 
-    val img = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB)
+    val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
 
-    val g = img.getGraphics
+    val g = img.getGraphics.asInstanceOf[Graphics2D]
     g.setColor(Color.WHITE)
-    g.fillRect(0, 0, h - 1, w - 1)
+    g.fillRect(0, 0, w - 1, h - 1)
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
     g.setColor(new Color(scalaIORed))
     for (offset <- 1 until 3) {
