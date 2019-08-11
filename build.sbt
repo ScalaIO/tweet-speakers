@@ -17,3 +17,5 @@ libraryDependencies ++= Seq("io.circe" %% "circe-core", "io.circe" %% "circe-gen
   .map(_ % circeVersion)
 
 libraryDependencies += "dev.zio" %% "zio" % "1.0.0-RC11-1"
+
+libraryDependencies += "com.typesafe" % "config" % "1.3.4"

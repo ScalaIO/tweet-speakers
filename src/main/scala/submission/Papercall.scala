@@ -7,8 +7,13 @@ case class Profile(name: String, twitter: String)
 case class Submission(talk: Talk, profile: Profile)
 
 object Papercall {
+
+  import com.typesafe.config.{Config, ConfigFactory}
+
+  val conf: Config = ConfigFactory.load
+  val token = conf.getString("papercall.token")
+
   def acceptedTalks() = {
-    val token = sys.env("PAPERCALL_TOKEN")
     val request = sttp.get(uri"https://www.papercall.io/api/v1/submissions?_token=$token&per_page=50&state=accepted")
     implicit val backend = HttpURLConnectionBackend()
     val response = request.send()
