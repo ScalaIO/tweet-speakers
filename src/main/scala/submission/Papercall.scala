@@ -14,7 +14,7 @@ object Papercall {
   val token = conf.getString("papercall.token")
 
   def acceptedTalks() = {
-    val request = sttp.get(uri"https://www.papercall.io/api/v1/submissions?_token=$token&per_page=50&state=accepted")
+    val request = sttp.get(uri"https://www.papercall.io/api/v1/submissions?_token=$token&per_page=100&state=accepted")
     implicit val backend = HttpURLConnectionBackend()
     val response = request.send()
 
