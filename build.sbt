@@ -19,3 +19,5 @@ libraryDependencies ++= Seq("io.circe" %% "circe-core", "io.circe" %% "circe-gen
 libraryDependencies += "dev.zio" %% "zio" % "1.0.0-RC11-1"
 
 libraryDependencies += "com.typesafe" % "config" % "1.3.4"
+
+libraryDependencies += "org.apache.commons" % "commons-text" % "1.7"

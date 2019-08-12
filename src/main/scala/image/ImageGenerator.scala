@@ -5,6 +5,7 @@ import java.awt.{Color, Font, Graphics2D, RenderingHints}
 import java.io.File
 
 import javax.imageio.ImageIO
+import org.apache.commons.text.WordUtils
 import zio.ZIO
 
 import scala.util.Try
@@ -36,14 +37,25 @@ object ImageGenerator {
       ImageIO.read(new File(this.getClass.getResource("scalaio_small.png").getFile))
     g.drawImage(scalaIOPicture, 270, 400, 100, 42, Color.WHITE, null)
 
+    g.setClip(0, 0, w / 2, h)
     g.setFont(new Font(timesRoman, Font.PLAIN, 40))
-    g.drawString(imageDetails.talkTitle, 50, 50)
+    drawMultilineString(g, imageDetails.talkTitle, 31, 50, 50)
+
     g.setFont(new Font(timesRoman, Font.PLAIN, 24))
-    g.drawString(imageDetails.speakerName, 50, 150)
+    drawMultilineString(g, imageDetails.speakerName, 31, 50, 150)
 
     ZIO.fromTry(
       Try(ImageIO.write(img, "png", new File(s"/Users/jeandetoeuf/Desktop/accepted/${imageDetails.speakerName}.png")))
     )
   }
 
+  private def drawMultilineString(g: Graphics2D, text: String, wrapLength: Int, x: Int, y: Int) = {
+    val lineHeight = g.getFontMetrics().getHeight()
+    WordUtils
+      .wrap(text, wrapLength)
+      .split("\n")
+      .zipWithIndex
+      .map { case (line, number) => (line, number * lineHeight) }
+      .foreach { case (line, offset) => g.drawString(line, x, y + offset) }
+  }
 }
