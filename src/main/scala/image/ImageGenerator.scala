@@ -1,7 +1,7 @@
 package image
 
 import java.awt.image.BufferedImage
-import java.awt.{Color, Font, Graphics2D, RenderingHints}
+import java.awt._
 import java.io.File
 
 import javax.imageio.ImageIO
@@ -11,7 +11,7 @@ import zio.ZIO
 import scala.util.Try
 
 object ImageGenerator {
-  val scalaIORed = 0xbc1321
+  val scalaIORed = new Color(0xbc1321)
 
   def of(imageDetails: ImageDetails) = {
     val h = 267 * 3
@@ -21,26 +21,34 @@ object ImageGenerator {
     val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
 
     val g = img.getGraphics.asInstanceOf[Graphics2D]
-    g.setColor(Color.black)
-    g.fillRect(0, 0, w - 1, h - 1)
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-    g.setColor(new Color(scalaIORed))
+    g.setBackground(Color.black)
+    g.setColor(Color.black)
+    g.fillRect(0, 0, w - 1, h - 1)
+
+    g.setColor(scalaIORed)
     for (offset <- 1 until 3) {
       g.drawLine(50, 250 + offset, 200, 250 + offset)
     }
 
     val profilePicture: BufferedImage = ImageIO.read(imageDetails.speakerPicture)
     g.drawImage(profilePicture, w - h, 0, h, h, Color.black, null)
+    val transparent = new Color(255, 255, 255, 0)
+    val gradientWidth = 100
+    g.setPaint(new GradientPaint(w - h, 0, Color.black, w - h + gradientWidth, 0, transparent))
+    g.fillRect(w - h, 0, gradientWidth, h)
 
     val scalaIOPicture: BufferedImage =
       ImageIO.read(new File(this.getClass.getResource("scalaio_black.png").getFile))
     g.drawImage(scalaIOPicture, 50, h - 300, 600, 300, Color.black, null)
 
+    g.setColor(scalaIORed)
     g.setClip(0, 0, w / 2, h)
     g.setFont(new Font(timesRoman, Font.PLAIN, 40))
     drawMultilineString(g, imageDetails.talkTitle, 31, 50, 50)
 
+    g.setColor(scalaIORed)
     g.setFont(new Font(timesRoman, Font.PLAIN, 24))
     drawMultilineString(g, imageDetails.speakerName, 31, 50, h / 2)
 
