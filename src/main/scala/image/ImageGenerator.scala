@@ -31,7 +31,7 @@ object ImageGenerator {
     }
 
     val profilePicture: BufferedImage = ImageIO.read(imageDetails.speakerPicture)
-    g.drawImage(profilePicture, 270, 100, 200, 200, Color.WHITE, null)
+    g.drawImage(profilePicture, w - h, 0, h, h, Color.WHITE, null)
 
     val scalaIOPicture: BufferedImage =
       ImageIO.read(new File(this.getClass.getResource("scalaio_small.png").getFile))
