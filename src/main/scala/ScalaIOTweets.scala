@@ -13,7 +13,7 @@ object ScalaIOTweets extends App {
         submissions
           .map(generateImage)
           //TODO remove when complete
-          .take(10)
+          .take(1)
     )
   )
 

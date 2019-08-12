@@ -21,7 +21,7 @@ object ImageGenerator {
     val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
 
     val g = img.getGraphics.asInstanceOf[Graphics2D]
-    g.setColor(Color.WHITE)
+    g.setColor(Color.black)
     g.fillRect(0, 0, w - 1, h - 1)
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
@@ -31,18 +31,18 @@ object ImageGenerator {
     }
 
     val profilePicture: BufferedImage = ImageIO.read(imageDetails.speakerPicture)
-    g.drawImage(profilePicture, w - h, 0, h, h, Color.WHITE, null)
+    g.drawImage(profilePicture, w - h, 0, h, h, Color.black, null)
 
     val scalaIOPicture: BufferedImage =
-      ImageIO.read(new File(this.getClass.getResource("scalaio_small.png").getFile))
-    g.drawImage(scalaIOPicture, 270, 400, 100, 42, Color.WHITE, null)
+      ImageIO.read(new File(this.getClass.getResource("scalaio_black.png").getFile))
+    g.drawImage(scalaIOPicture, 50, h - 300, 600, 300, Color.black, null)
 
     g.setClip(0, 0, w / 2, h)
     g.setFont(new Font(timesRoman, Font.PLAIN, 40))
     drawMultilineString(g, imageDetails.talkTitle, 31, 50, 50)
 
     g.setFont(new Font(timesRoman, Font.PLAIN, 24))
-    drawMultilineString(g, imageDetails.speakerName, 31, 50, 150)
+    drawMultilineString(g, imageDetails.speakerName, 31, 50, h / 2)
 
     ZIO.fromTry(
       Try(ImageIO.write(img, "png", new File(s"/Users/jeandetoeuf/Desktop/accepted/${imageDetails.speakerName}.png")))
