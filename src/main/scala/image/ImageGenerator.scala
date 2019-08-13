@@ -12,7 +12,7 @@ import zio.ZIO
 import scala.util.Try
 
 object ImageGenerator {
-  private val scalaIORed = new Color(0xbc1321)
+  private val scalaIORed = new Color(0xcc1424)
   private val transparent = new Color(0, 0, 0, 0)
   private val montserrat40Plain = new Font("Montserrat", Font.PLAIN, 40)
   private val ratio = 3
