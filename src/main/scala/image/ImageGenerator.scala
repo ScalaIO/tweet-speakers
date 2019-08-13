@@ -4,6 +4,7 @@ import java.awt._
 import java.awt.image.BufferedImage
 import java.io.File
 
+import com.typesafe.config.{Config, ConfigFactory}
 import javax.imageio.ImageIO
 import org.apache.commons.text.WordUtils
 import zio.ZIO
@@ -17,6 +18,7 @@ object ImageGenerator {
   private val ratio = 3
   private val h = 267 * ratio
   private val w = 507 * ratio
+  val conf: Config = ConfigFactory.load
 
   def of(imageDetails: ImageDetails) = {
     val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
@@ -29,7 +31,7 @@ object ImageGenerator {
     drawSpeakerName(g, imageDetails)
 
     ZIO.fromTry(
-      Try(ImageIO.write(img, "png", new File(s"/Users/jeandetoeuf/Desktop/accepted/${imageDetails.speakerName}.png")))
+      Try(ImageIO.write(img, "png", new File(s"${conf.getString("output.imageDir")}/${imageDetails.speakerName}.png")))
     )
   }
 

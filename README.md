@@ -34,6 +34,7 @@ export TWITTER_CONSUMER_TOKEN_SECRET='my-consumer-secret'
 export TWITTER_ACCESS_TOKEN_KEY='my-access-key'
 export TWITTER_ACCESS_TOKEN_SECRET='my-access-secret'
 export PAPERCALL_TOKEN='my-papercall-token'
+export OUTPUT_DIR='/output/dir/for/images'
 ```
 
 You can also add them to your configuration file, usually called `application.conf`:
@@ -50,6 +51,9 @@ twitter {
 }
 papercall {
   token = "my-personal-token"
+}
+output {
+  imageDir = "/output/dir/for/images"
 }
 ```
 
