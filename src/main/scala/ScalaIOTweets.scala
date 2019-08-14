@@ -24,7 +24,7 @@ object ScalaIOTweets extends App {
   private def generateImage(submission: Submission) = {
     val imageDetails = for {
       profilePictureURL <- Twitter.profilePicture(submission.profile.twitter)
-    } yield ImageDetails(submission.talk.title, submission.profile.name, profilePictureURL)
+    } yield ImageDetails(submission.talk.title, submission.profile.name, profilePictureURL, submission.talk.talk_format)
     imageDetails.tap(details => putStrLn(details.toString))
   }
 }
