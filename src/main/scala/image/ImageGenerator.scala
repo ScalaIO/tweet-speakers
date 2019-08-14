@@ -14,6 +14,8 @@ import scala.util.Try
 object ImageGenerator {
   private val scalaIORed = new Color(0xcc1424)
   private val transparent = new Color(0, 0, 0, 0)
+  private val backgroundColor: Color = Color.black
+
   private val montserrat40Plain = new Font("Montserrat", Font.PLAIN, 40)
   private val ratio = 3
   private val h = 267 * ratio
@@ -37,21 +39,30 @@ object ImageGenerator {
 
   private def initializeCanvas(g: Graphics2D) = {
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    g.setBackground(Color.black)
+    g.setBackground(backgroundColor)
   }
 
   private def drawProfilePicture(g: Graphics2D, imageDetails: ImageDetails): Unit = {
     val profilePicture: BufferedImage = ImageIO.read(imageDetails.speakerPicture)
-    g.drawImage(profilePicture, w - h, 0, h, h, Color.black, null)
+    g.drawImage(profilePicture, w - h, 0, h, h, backgroundColor, null)
     val speakerPictureGradientWidth = 100
-    g.setPaint(new GradientPaint(w - h, 0, Color.black, w - h + speakerPictureGradientWidth, 0, transparent))
+    g.setPaint(new GradientPaint(w - h, 0, backgroundColor, w - h + speakerPictureGradientWidth, 0, transparent))
     g.fillRect(0, 0, w - h + speakerPictureGradientWidth, h)
   }
 
   private def drawScalaIOLogo(g: Graphics2D) = {
     val scalaIOPicture: BufferedImage =
       ImageIO.read(new File(this.getClass.getResource("scalaio_black.png").getFile))
-    g.drawImage(scalaIOPicture, 50, h - 300, 600, 300, Color.black, null)
+    val logoWidth = 600
+    g.drawImage(
+      scalaIOPicture,
+      50,
+      h - 300,
+      logoWidth,
+      logoWidth * scalaIOPicture.getHeight / scalaIOPicture.getWidth,
+      backgroundColor,
+      null
+    )
   }
 
   private def drawTalkTitle(g: Graphics2D, imageDetails: ImageDetails): Unit = {
