@@ -13,6 +13,7 @@ object ScalaIOTweets extends App {
     submissions =>
       ZIO.collectAll(
         submissions
+        //.filter(submission => submission.profile.twitter.contains("florentpellet"))
           .map(imageDetailsFromSubmission)
         //TODO remove when complete
         //.take(1)
@@ -29,7 +30,7 @@ object ScalaIOTweets extends App {
       .fold(zio.Task.succeed(kitten).asInstanceOf[zio.ZIO[Any, Throwable, java.net.URL]])(Twitter.profilePicture)
     val imageDetails = for {
       profilePictureURL <- profilePicture
-    } yield ImageDetails(submission.talk.title, submission.profile.name, profilePictureURL, submission.talk.talk_format)
+    } yield ImageDetails(submission.talk.title, submission.profile.name, submission.talk.talk_format, profilePictureURL)
     imageDetails.tap(details => putStrLn(details.toString))
   }
 }

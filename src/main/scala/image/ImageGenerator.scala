@@ -46,7 +46,18 @@ object ImageGenerator {
 
   private def drawProfilePicture(g: Graphics2D, speakerPicture: URL): Unit = {
     val profilePicture: BufferedImage = ImageIO.read(speakerPicture)
-    g.drawImage(profilePicture, w - h, 0, h, h, backgroundColor, null)
+    val (maxWidth, maxHeight) = (h, h)
+    val profilePictureH = Math.max(maxHeight * profilePicture.getHeight / profilePicture.getWidth, maxHeight)
+    val profilePictureW = Math.max(maxWidth * profilePicture.getWidth / profilePicture.getHeight, maxWidth)
+    g.drawImage(
+      profilePicture,
+      w - h - (profilePictureW - maxWidth) / 2,
+      -1 * (profilePictureH - maxHeight) / 2,
+      profilePictureW,
+      profilePictureH,
+      backgroundColor,
+      null
+    )
     val speakerPictureGradientWidth = 100
     g.setPaint(new GradientPaint(w - h, 0, backgroundColor, w - h + speakerPictureGradientWidth, 0, transparent))
     g.fillRect(0, 0, w - h + speakerPictureGradientWidth, h)
