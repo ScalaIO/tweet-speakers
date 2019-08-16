@@ -3,6 +3,7 @@ package image
 import java.awt._
 import java.awt.image.BufferedImage
 import java.io.File
+import java.net.URL
 
 import com.typesafe.config.{Config, ConfigFactory}
 import javax.imageio.ImageIO
@@ -27,11 +28,11 @@ object ImageGenerator {
     val g = img.getGraphics.asInstanceOf[Graphics2D]
 
     initializeCanvas(g)
-    drawProfilePicture(g, imageDetails)
+    drawProfilePicture(g, imageDetails.speakerPicture)
     drawScalaIOLogo(g)
-    drawTalkTitle(g, imageDetails)
-    drawSpeakerName(g, imageDetails)
-    drawTalkFormat(g, imageDetails)
+    drawTalkTitle(g, imageDetails.talkTitle)
+    drawSpeakerName(g, imageDetails.speakerName)
+    drawTalkFormat(g, imageDetails.talkFormat.name)
 
     ZIO.fromTry(
       Try(ImageIO.write(img, "png", new File(s"${conf.getString("output.imageDir")}/${imageDetails.speakerName}.png")))
@@ -43,8 +44,8 @@ object ImageGenerator {
     g.setBackground(backgroundColor)
   }
 
-  private def drawProfilePicture(g: Graphics2D, imageDetails: ImageDetails): Unit = {
-    val profilePicture: BufferedImage = ImageIO.read(imageDetails.speakerPicture)
+  private def drawProfilePicture(g: Graphics2D, speakerPicture: URL): Unit = {
+    val profilePicture: BufferedImage = ImageIO.read(speakerPicture)
     g.drawImage(profilePicture, w - h, 0, h, h, backgroundColor, null)
     val speakerPictureGradientWidth = 100
     g.setPaint(new GradientPaint(w - h, 0, backgroundColor, w - h + speakerPictureGradientWidth, 0, transparent))
@@ -52,8 +53,7 @@ object ImageGenerator {
   }
 
   private def drawScalaIOLogo(g: Graphics2D) = {
-    val scalaIOPicture: BufferedImage =
-      ImageIO.read(new File(this.getClass.getResource("scalaio_black.png").getFile))
+    val scalaIOPicture: BufferedImage = ImageIO.read(this.getClass.getResource("scalaio_black.png"))
     val logoWidth = 600
     g.drawImage(
       scalaIOPicture,
@@ -66,13 +66,13 @@ object ImageGenerator {
     )
   }
 
-  private def drawTalkTitle(g: Graphics2D, imageDetails: ImageDetails): Unit = {
+  private def drawTalkTitle(g: Graphics2D, talkTitle: String): Unit = {
     g.setColor(scalaIORed)
     g.setFont(montserrat40Plain)
-    drawMultilineString(g, imageDetails.talkTitle, 31, 50, 100)
+    drawMultilineString(g, talkTitle, 31, 50, 100)
   }
 
-  private def drawSpeakerName(g: Graphics2D, imageDetails: ImageDetails): Unit = {
+  private def drawSpeakerName(g: Graphics2D, speakerName: String): Unit = {
     val speakerNameGradientWidth = w - h - 100
     g.setPaint(new GradientPaint(speakerNameGradientWidth / 2, 0, scalaIORed, speakerNameGradientWidth, 0, transparent))
     val lineHeight = g.getFontMetrics().getHeight
@@ -80,7 +80,7 @@ object ImageGenerator {
 
     g.setColor(Color.white)
     g.setFont(montserrat40Plain)
-    drawMultilineString(g, imageDetails.speakerName, 31, 50, h / 2)
+    drawMultilineString(g, speakerName, 31, 50, h / 2)
   }
 
   private def drawMultilineString(g: Graphics2D, text: String, wrapLength: Int, x: Int, y: Int) = {
@@ -93,19 +93,15 @@ object ImageGenerator {
       .foreach { case (line, offset) => g.drawString(line, x, y + offset) }
   }
 
-  def drawTalkFormat(g: Graphics2D, imageDetails: ImageDetails) = {
+  def drawTalkFormat(g: Graphics2D, talkFormat: String) = {
     g.setColor(scalaIORed)
     val offsetT = 50
     val (marginH, marginT) = (50, 30)
-    val rectangle = g.getFontMetrics.getStringBounds(imageDetails.talkFormat.name, g)
+    val rectangle = g.getFontMetrics.getStringBounds(talkFormat, g)
     val (width, height) = (rectangle.getWidth.intValue() + marginH, rectangle.getHeight.intValue() + marginT)
     g.fillRect(w - width, offsetT, width, height)
 
     g.setColor(Color.white)
-    g.drawString(
-      imageDetails.talkFormat.name,
-      w - width + marginH / 2,
-      offsetT + height - rectangle.getHeight.intValue() / 2
-    )
+    g.drawString(talkFormat, w - width + marginH / 2, offsetT + height - rectangle.getHeight.intValue() / 2)
   }
 }

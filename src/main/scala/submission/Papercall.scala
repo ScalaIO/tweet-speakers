@@ -2,22 +2,6 @@ package submission
 
 import com.softwaremill.sttp._
 
-sealed trait TalkFormat {
-  val name: String
-}
-
-object Talk extends TalkFormat {
-  override val name: String = "Talk"
-}
-
-object Workshop extends TalkFormat {
-  override val name: String = "Workshop"
-}
-
-case class Talk(title: String, talk_format: TalkFormat)
-case class Profile(name: String, twitter: String)
-case class Submission(talk: Talk, profile: Profile)
-
 object Papercall {
 
   import com.typesafe.config.{Config, ConfigFactory}
@@ -34,8 +18,10 @@ object Papercall {
     import io.circe.generic.semiauto.deriveDecoder
     import io.circe.parser.decode
 
+    implicit val decodeTwitterAccount: Decoder[TwitterAccount] =
+      Decoder.decodeString.map(name => if (name.isEmpty) None else Some(name))
     implicit val decodeProfile: Decoder[Profile] = deriveDecoder[Profile]
-    implicit val decodeFoo: Decoder[TalkFormat] = Decoder.decodeString.map {
+    implicit val decodeFormat: Decoder[TalkFormat] = Decoder.decodeString.map {
       case "Workshop (3 hours)"      => Workshop
       case "Talk (45 minutes)"       => Talk
       case "Short Talk (20 minutes)" => Talk
