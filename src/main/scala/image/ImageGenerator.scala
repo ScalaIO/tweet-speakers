@@ -31,6 +31,7 @@ object ImageGenerator {
     drawScalaIOLogo(g)
     drawTalkTitle(g, imageDetails)
     drawSpeakerName(g, imageDetails)
+    drawTalkFormat(g, imageDetails)
 
     ZIO.fromTry(
       Try(ImageIO.write(img, "png", new File(s"${conf.getString("output.imageDir")}/${imageDetails.speakerName}.png")))
@@ -90,5 +91,21 @@ object ImageGenerator {
       .zipWithIndex
       .map { case (line, number) => (line, number * lineHeight) }
       .foreach { case (line, offset) => g.drawString(line, x, y + offset) }
+  }
+
+  def drawTalkFormat(g: Graphics2D, imageDetails: ImageDetails) = {
+    g.setColor(scalaIORed)
+    val offsetT = 50
+    val (marginH, marginT) = (50, 30)
+    val rectangle = g.getFontMetrics.getStringBounds(imageDetails.talkFormat.name, g)
+    val (width, height) = (rectangle.getWidth.intValue() + marginH, rectangle.getHeight.intValue() + marginT)
+    g.fillRect(w - width, offsetT, width, height)
+
+    g.setColor(Color.white)
+    g.drawString(
+      imageDetails.talkFormat.name,
+      w - width + marginH / 2,
+      offsetT + height - rectangle.getHeight.intValue() / 2
+    )
   }
 }
