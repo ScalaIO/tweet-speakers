@@ -13,9 +13,8 @@ object ScalaIOTweets extends App {
     submissions =>
       ZIO.collectAll(
         submissions
-        //.filter(submission => submission.profile.twitter.contains("florentpellet"))
           .map(imageDetailsFromSubmission)
-        //TODO remove when complete
+        //uncomment to test only first submission
         //.take(1)
     )
   )
