@@ -8,7 +8,7 @@ import zio.ZIO
 object Twitter {
   val restClient = TwitterRestClient()
 
-  def sendMediaTweetWithImage(message: String, imagePath: String): Any = {
+  def sendMediaTweetWithImage(message: String, imagePath: String) = {
     import scala.concurrent.ExecutionContext.Implicits.global
     for {
       upload <- restClient.uploadMediaFromPath(imagePath)
