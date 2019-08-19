@@ -1,6 +1,8 @@
+import java.net.URL
+
 import com.typesafe.config.{Config, ConfigFactory}
 import image.{ImageDetails, ImageGenerator}
-import submission.{Papercall, Submission, TwitterAccount}
+import submission.{Avatar, Papercall, Submission, TwitterAccount}
 import twitter.Twitter
 import zio.console._
 import zio.stream._
@@ -29,11 +31,19 @@ object ScalaIOTweets extends App {
       .succeed(submission)
       .tap(submission => putStrLn(submission.toString))
       .andThen(speakerImageFromLocalDirectory(submission.profile.name))
+      .orElse(speakerImageFromPaperCall(submission.profile.avatar))
       .orElse(speakerImageFromTwitterProfile(submission.profile.twitter))
+      .orElse(speakerImageFromGravatar(submission.profile.avatar))
       .orElse(kitten)
       .map(url => ImageDetails(submission.talk.title, submission.profile.name, submission.talk.talk_format, url))
       .tap(details => putStrLn(details.toString))
       .asInstanceOf[IO[Nothing, ImageDetails]]
+
+  private def speakerImageFromGravatar(avatar: Avatar) =
+    ZIO.fromOption(avatar.filter(_.contains("gravatar"))).map(link => new URL(link.replace("?s=500", "?s=801")))
+
+  private def speakerImageFromPaperCall(avatar: Avatar) =
+    ZIO.fromOption(avatar.filter(_.contains("papercall"))).map(link => new URL(link))
 
   private def speakerImageFromLocalDirectory(name: String) = {
     ZIO.fromOption(Option(File(s"$speakerPhotosDir/$name.jpg")).filter(_.exists).map(_.toURL))

@@ -18,7 +18,7 @@ object Papercall {
     import io.circe.generic.semiauto.deriveDecoder
     import io.circe.parser.decode
 
-    implicit val decodeTwitterAccount: Decoder[TwitterAccount] =
+    implicit val decodeTwitterAccount: Decoder[Option[String]] =
       Decoder.decodeString.map(name => if (name.isEmpty) None else Some(name))
     implicit val decodeProfile: Decoder[Profile] = deriveDecoder[Profile]
     implicit val decodeFormat: Decoder[TalkFormat] = Decoder.decodeString.map {
