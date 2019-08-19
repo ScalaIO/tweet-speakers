@@ -35,6 +35,7 @@ export TWITTER_ACCESS_TOKEN_KEY='my-access-key'
 export TWITTER_ACCESS_TOKEN_SECRET='my-access-secret'
 export PAPERCALL_TOKEN='my-papercall-token'
 export OUTPUT_DIR='/output/dir/for/images'
+export PHOTOS_DIR='/input/dir/for/speaker/photos'
 ```
 
 You can also add them to your configuration file, usually called `application.conf`:
@@ -52,8 +53,9 @@ twitter {
 papercall {
   token = "my-personal-token"
 }
-output {
-  imageDir = "/output/dir/for/images"
+files {
+  outputImagesDir = "/output/dir/for/images"
+  speakerPhotosDir = "/input/dir/for/speaker/photos"
 }
 ```
 

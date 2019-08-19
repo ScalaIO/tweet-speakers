@@ -35,7 +35,10 @@ object ImageGenerator {
     drawTalkFormat(g, imageDetails.talkFormat.name)
 
     ZIO.fromTry(
-      Try(ImageIO.write(img, "png", new File(s"${conf.getString("output.imageDir")}/${imageDetails.speakerName}.png")))
+      Try(
+        ImageIO
+          .write(img, "png", new File(s"${conf.getString("files.outputImagesDir")}/${imageDetails.speakerName}.png"))
+      )
     )
   }
 

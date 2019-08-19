@@ -1,14 +1,30 @@
+import com.typesafe.config.{Config, ConfigFactory}
 import image.{ImageDetails, ImageGenerator}
 import submission.{Papercall, Submission, TwitterAccount}
 import twitter.Twitter
 import zio.console._
-import zio.{App, ZIO}
+import zio.stream._
+import zio.{App, ZIO, _}
+
+import scala.reflect.io.File
 
 object ScalaIOTweets extends App {
 
-  private val kitten = zio.Task.succeed(this.getClass.getClassLoader.getResource("kitten.jpg"))
+  private val conf: Config = ConfigFactory.load
+  private val speakerPhotosDir = conf.getString("files.speakerPhotosDir")
+  val acceptedTalks = Stream
+    .fromEffect(ZIO.fromEither(Papercall.acceptedTalks()))
+    .flatMap(submissions => Stream.fromIterable(submissions))
 
-  private def imageDetailsFromSubmission(submission: Submission) =
+  private val kitten = zio.Task.succeed(this.getClass.getClassLoader.getResource("kitten.jpg"))
+  val imageDetails = acceptedTalks
+    .flatMap(submission => Stream.fromEffect(imageDetailsFromSubmission(submission)))
+  val savedImages = imageDetails.foreach(details => ImageGenerator.of(details).unit)
+
+  private def speakerImageFromTwitterProfile(twitterAccount: TwitterAccount) =
+    ZIO.fromOption(twitterAccount).flatMap(Twitter.profilePicture)
+
+  private def imageDetailsFromSubmission(submission: Submission): IO[Nothing, ImageDetails] =
     ZIO
       .succeed(submission)
       .tap(submission => putStrLn(submission.toString))
@@ -17,26 +33,11 @@ object ScalaIOTweets extends App {
       .orElse(kitten)
       .map(url => ImageDetails(submission.talk.title, submission.profile.name, submission.talk.talk_format, url))
       .tap(details => putStrLn(details.toString))
+      .asInstanceOf[IO[Nothing, ImageDetails]]
 
-  private def speakerImageFromLocalDirectory(name: String) =
-    ZIO.fromOption(Option(this.getClass.getClassLoader.getResource(s"image/speakers/$name.jpg")))
-
-  private def speakerImageFromTwitterProfile(twitterAccount: TwitterAccount) =
-    ZIO.fromOption(twitterAccount).flatMap(Twitter.profilePicture)
-
-  val acceptedTalks = ZIO.fromEither(Papercall.acceptedTalks())
-
-  val imageDetails = acceptedTalks.flatMap(
-    submissions =>
-      ZIO.collectAll(
-        submissions
-          .map(imageDetailsFromSubmission)
-        //uncomment to test only first submission
-        //.take(1)
-    )
-  )
-
-  val savedImages = imageDetails.flatMap(details => ZIO.collectAll(details.map(ImageGenerator.of)))
+  private def speakerImageFromLocalDirectory(name: String) = {
+    ZIO.fromOption(Option(File(s"$speakerPhotosDir/$name.jpg")).filter(_.exists).map(_.toURL))
+  }
 
   override def run(args: List[String]): ZIO[ScalaIOTweets.Environment, Nothing, Int] = savedImages.fold(_ => -1, _ => 0)
 
