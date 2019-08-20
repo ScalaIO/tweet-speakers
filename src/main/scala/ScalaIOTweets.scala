@@ -1,8 +1,8 @@
 import java.net.URL
 
 import com.typesafe.config.{Config, ConfigFactory}
-import image.{ImageDetails, ImageGenerator}
-import submission.{Avatar, Papercall, Submission, TwitterAccount}
+import image.{ImageDetails, ImageGenerator, SpeakerDetails}
+import submission._
 import twitter.Twitter
 import zio.console._
 import zio.stream._
@@ -30,14 +30,29 @@ object ScalaIOTweets extends App {
     ZIO
       .succeed(submission)
       .tap(submission => putStrLn(submission.toString))
-      .andThen(speakerImageFromLocalDirectory(submission.profile.name))
-      .orElse(speakerImageFromPaperCall(submission.profile.avatar))
-      .orElse(speakerImageFromTwitterProfile(submission.profile.twitter))
-      .orElse(speakerImageFromGravatar(submission.profile.avatar))
-      .orElse(kitten)
-      .map(url => ImageDetails(submission.talk.title, submission.profile.name, submission.talk.talk_format, url))
+      .andThen(
+        profileUrl(submission.profile).zipWith(
+          ZIO.fromOption(submission.co_presenter_profiles.headOption).flatMap(profile => profileUrl(profile)).option
+        )((a, b) => (a, b))
+      )
+      .map {
+        case (speakerUrl, maybeCoSpeakerUrl) =>
+          ImageDetails(
+            submission.talk.title,
+            SpeakerDetails(submission.profile.name, speakerUrl),
+            maybeCoSpeakerUrl.map(url => SpeakerDetails(submission.co_presenter_profiles.head.name, url)),
+            submission.talk.talk_format
+          )
+      }
       .tap(details => putStrLn(details.toString))
       .asInstanceOf[IO[Nothing, ImageDetails]]
+
+  private def profileUrl(profile: Profile) =
+    speakerImageFromLocalDirectory(profile.name)
+      .orElse(speakerImageFromPaperCall(profile.avatar))
+      .orElse(speakerImageFromTwitterProfile(profile.twitter))
+      .orElse(speakerImageFromGravatar(profile.avatar))
+      .orElse(kitten)
 
   private def speakerImageFromGravatar(avatar: Avatar) =
     ZIO.fromOption(avatar.filter(_.contains("gravatar"))).map(link => new URL(link.replace("?s=500", "?s=801")))

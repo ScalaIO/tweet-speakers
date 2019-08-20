@@ -15,4 +15,5 @@ object Workshop extends TalkFormat {
 case class Talk(title: String, talk_format: TalkFormat)
 
 case class Profile(name: String, twitter: TwitterAccount, avatar: Avatar)
-case class Submission(talk: Talk, profile: Profile)
+
+case class Submission(talk: Talk, profile: Profile, co_presenter_profiles: Seq[Profile])

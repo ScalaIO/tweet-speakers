@@ -4,4 +4,11 @@ import java.net.URL
 
 import submission.TalkFormat
 
-case class ImageDetails(talkTitle: String, speakerName: String, talkFormat: TalkFormat, speakerPicture: URL)
+case class SpeakerDetails(name: String, picture: URL)
+
+case class ImageDetails(
+  talkTitle: String,
+  speaker: SpeakerDetails,
+  coSpeaker: Option[SpeakerDetails],
+  talkFormat: TalkFormat
+)

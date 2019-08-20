@@ -28,16 +28,19 @@ object ImageGenerator {
     val g = img.getGraphics.asInstanceOf[Graphics2D]
 
     initializeCanvas(g)
-    drawProfilePicture(g, imageDetails.speakerPicture)
+    drawProfilePicture(g, imageDetails.speaker.picture, imageDetails.coSpeaker.map(_.picture))
     drawScalaIOLogo(g)
     drawTalkTitle(g, imageDetails.talkTitle)
-    drawSpeakerName(g, imageDetails.speakerName)
+    drawSpeakerName(g, imageDetails.speaker.name)
     drawTalkFormat(g, imageDetails.talkFormat.name)
+
+    val fileName =
+      imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name}-${co.name}")
 
     ZIO.fromTry(
       Try(
         ImageIO
-          .write(img, "png", new File(s"${conf.getString("files.outputImagesDir")}/${imageDetails.speakerName}.png"))
+          .write(img, "png", new File(s"${conf.getString("files.outputImagesDir")}/${fileName}.png"))
       )
     )
   }
@@ -47,23 +50,38 @@ object ImageGenerator {
     g.setBackground(backgroundColor)
   }
 
-  private def drawProfilePicture(g: Graphics2D, speakerPicture: URL): Unit = {
-    val profilePicture: BufferedImage = ImageIO.read(speakerPicture)
+  private def drawProfilePicture(g: Graphics2D, speakerPicture: URL, coSpeakerPicture: Option[URL]): Unit = {
     val (maxWidth, maxHeight) = (h, h)
-    val profilePictureH = Math.max(maxHeight * profilePicture.getHeight / profilePicture.getWidth, maxHeight)
-    val profilePictureW = Math.max(maxWidth * profilePicture.getWidth / profilePicture.getHeight, maxWidth)
-    g.drawImage(
-      profilePicture,
-      w - h - (profilePictureW - maxWidth) / 2,
-      -1 * (profilePictureH - maxHeight) / 2,
-      profilePictureW,
-      profilePictureH,
-      backgroundColor,
-      null
-    )
+    val speakerImage: BufferedImage = ImageIO.read(speakerPicture)
+    coSpeakerPicture.fold {
+      drawImage(g, speakerImage, maxWidth, maxHeight, w - h, 0)
+    } { coSpeakerPic =>
+      drawImage(g, speakerImage, maxWidth / 2, maxHeight, w - h, 0)
+      val coSpeakerImage: BufferedImage = ImageIO.read(coSpeakerPic)
+      drawImage(g, coSpeakerImage, maxWidth / 2, maxHeight, w - h + maxWidth / 2, 0)
+    }
     val speakerPictureGradientWidth = 100
     g.setPaint(new GradientPaint(w - h, 0, backgroundColor, w - h + speakerPictureGradientWidth, 0, transparent))
     g.fillRect(0, 0, w - h + speakerPictureGradientWidth, h)
+  }
+
+  private def drawImage(g: Graphics2D, image: BufferedImage, maxWidth: Int, maxHeight: Int, x: Int, y: Int) = {
+    val savedClip = g.getClip
+    g.setClip(x, y, maxWidth, maxHeight)
+    val resizedWidth = maxHeight * image.getWidth / image.getHeight
+    val resizedHeight = maxWidth * image.getHeight / image.getWidth
+    val width = Math.max(resizedWidth, maxWidth)
+    val height = Math.max(maxHeight, resizedHeight)
+    g.drawImage(
+      image,
+      x + (maxWidth - width) / 2,
+      y + (maxHeight - Math.max(resizedHeight, maxHeight)) / 2,
+      width,
+      height,
+      backgroundColor,
+      null
+    )
+    g.setClip(savedClip)
   }
 
   private def drawScalaIOLogo(g: Graphics2D) = {
