@@ -17,7 +17,8 @@ object ImageGenerator {
   private val transparent = new Color(0, 0, 0, 0)
   private val backgroundColor: Color = Color.black
 
-  private val montserrat40Plain = new Font("Montserrat", Font.PLAIN, 40)
+  private val montserratBigPlain = new Font("Montserrat", Font.PLAIN, 40)
+  private val montserratSmallPlain = new Font("Montserrat", Font.PLAIN, 32)
   private val ratio = 3
   private val h = 267 * ratio
   private val w = 507 * ratio
@@ -94,20 +95,18 @@ object ImageGenerator {
   private def drawScalaIOLogo(g: Graphics2D) = {
     val scalaIOPicture: BufferedImage = ImageIO.read(this.getClass.getResource("scalaio_black.png"))
     val logoWidth = 600
-    g.drawImage(
-      scalaIOPicture,
-      50,
-      h - 300,
-      logoWidth,
-      logoWidth * scalaIOPicture.getHeight / scalaIOPicture.getWidth,
-      backgroundColor,
-      null
-    )
+    val logoHeight = logoWidth * scalaIOPicture.getHeight / scalaIOPicture.getWidth
+    g.drawImage(scalaIOPicture, 50, h - 400, logoWidth, logoHeight, backgroundColor, null)
+    g.setColor(Color.white)
+    g.setFont(montserratSmallPlain)
+    val dateY = h - g.getFontMetrics.getHeight * 2 - 15
+    g.drawString("29-31 October 2019, Lyon, France", 50, dateY)
+    g.drawString("#scalaIO2019", 50, dateY + g.getFontMetrics.getHeight)
   }
 
   private def drawTalkTitle(g: Graphics2D, talkTitle: String): Unit = {
     g.setColor(Color.white)
-    g.setFont(montserrat40Plain)
+    g.setFont(montserratBigPlain)
     drawMultilineString(g, talkTitle, 31, 50, 100)
   }
 
@@ -118,7 +117,7 @@ object ImageGenerator {
     g.fillRect(0, h / 2 - lineHeight, speakerNameGradientWidth, (lineHeight * 1.5).intValue())
 
     g.setColor(Color.white)
-    g.setFont(montserrat40Plain)
+    g.setFont(montserratBigPlain)
     drawMultilineString(g, speakersName, 31, 50, h / 2)
   }
 
