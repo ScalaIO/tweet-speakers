@@ -27,15 +27,22 @@ object ImageGenerator {
     val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
     val g = img.getGraphics.asInstanceOf[Graphics2D]
 
+    val speakersName = imageDetails.coSpeaker
+      .fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name} - ${co.name}")
+      .toLowerCase
+      .split(' ')
+      .map(_.capitalize)
+      .mkString(" ")
+
     initializeCanvas(g)
     drawProfilePicture(g, imageDetails.speaker.picture, imageDetails.coSpeaker.map(_.picture))
     drawScalaIOLogo(g)
     drawTalkTitle(g, imageDetails.talkTitle)
-    drawSpeakerName(g, imageDetails.speaker.name)
+    drawSpeakerName(g, speakersName)
     drawTalkFormat(g, imageDetails.talkFormat.name)
 
     val fileName =
-      imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name}-${co.name}")
+      imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"$speakersName")
 
     ZIO.fromTry(
       Try(
@@ -104,7 +111,7 @@ object ImageGenerator {
     drawMultilineString(g, talkTitle, 31, 50, 100)
   }
 
-  private def drawSpeakerName(g: Graphics2D, speakerName: String): Unit = {
+  private def drawSpeakerName(g: Graphics2D, speakersName: String): Unit = {
     val speakerNameGradientWidth = w - h - 100
     g.setPaint(new GradientPaint(speakerNameGradientWidth / 2, 0, scalaIORed, speakerNameGradientWidth, 0, transparent))
     val lineHeight = g.getFontMetrics().getHeight
@@ -112,7 +119,7 @@ object ImageGenerator {
 
     g.setColor(Color.white)
     g.setFont(montserrat40Plain)
-    drawMultilineString(g, speakerName, 31, 50, h / 2)
+    drawMultilineString(g, speakersName, 31, 50, h / 2)
   }
 
   private def drawMultilineString(g: Graphics2D, text: String, wrapLength: Int, x: Int, y: Int) = {
