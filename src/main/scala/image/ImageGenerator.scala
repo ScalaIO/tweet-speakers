@@ -106,7 +106,7 @@ object ImageGenerator {
   }
 
   private def drawTalkTitle(g: Graphics2D, talkTitle: String): Unit = {
-    g.setColor(scalaIORed)
+    g.setColor(Color.white)
     g.setFont(montserrat40Plain)
     drawMultilineString(g, talkTitle, 31, 50, 100)
   }
