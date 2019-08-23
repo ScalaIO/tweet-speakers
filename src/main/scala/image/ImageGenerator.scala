@@ -28,27 +28,22 @@ object ImageGenerator {
     val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
     val g = img.getGraphics.asInstanceOf[Graphics2D]
 
-    val speakersName = imageDetails.coSpeaker
-      .fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name} - ${co.name}")
-      .toLowerCase
-      .split(' ')
-      .map(_.capitalize)
-      .mkString(" ")
-
     initializeCanvas(g)
     drawProfilePicture(g, imageDetails.speaker.picture, imageDetails.coSpeaker.map(_.picture))
     drawScalaIOLogo(g)
     drawTalkTitle(g, imageDetails.talkTitle)
-    drawSpeakerName(g, speakersName)
+    drawSpeakerName(g, imageDetails.speaker.formattedName, imageDetails.coSpeaker.map(_.formattedName))
     drawTalkFormat(g, imageDetails.talkFormat.name)
 
-    val fileName =
-      imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"$speakersName")
+    val speakersName =
+      imageDetails.coSpeaker.fold(imageDetails.speaker.formattedName)(
+        co => s"${imageDetails.speaker.formattedName} - ${co.formattedName}"
+      )
 
     ZIO.fromTry(
       Try(
         ImageIO
-          .write(img, "png", new File(s"${conf.getString("files.outputImagesDir")}/${fileName}.png"))
+          .write(img, "png", new File(s"${conf.getString("files.outputImagesDir")}/${speakersName}.png"))
       )
     )
   }
@@ -110,15 +105,20 @@ object ImageGenerator {
     drawMultilineString(g, talkTitle, 31, 50, 100)
   }
 
-  private def drawSpeakerName(g: Graphics2D, speakersName: String): Unit = {
+  private def drawSpeakerName(g: Graphics2D, speakerName: String, coSpeakerName: Option[String]): Unit = {
     val speakerNameGradientWidth = w - h - 100
     g.setPaint(new GradientPaint(speakerNameGradientWidth / 2, 0, scalaIORed, speakerNameGradientWidth, 0, transparent))
-    val lineHeight = g.getFontMetrics().getHeight
-    g.fillRect(0, h / 2 - lineHeight, speakerNameGradientWidth, (lineHeight * 1.5).intValue())
+    val lineHeight = (g.getFontMetrics().getHeight * 1.5).intValue()
+    val rectangleHeight = lineHeight * coSpeakerName.fold(1)(_ => 2)
+    g.fillRect(0, h / 2 - rectangleHeight, speakerNameGradientWidth, rectangleHeight)
 
     g.setColor(Color.white)
     g.setFont(montserratBigPlain)
-    drawMultilineString(g, speakersName, 31, 50, h / 2)
+    val base = h / 2 - rectangleHeight + lineHeight * 3 / 4
+    coSpeakerName.fold(drawMultilineString(g, speakerName, 31, 50, base))(co => {
+      drawMultilineString(g, speakerName, 31, 50, base)
+      drawMultilineString(g, co, 31, 50, base + lineHeight)
+    })
   }
 
   private def drawMultilineString(g: Graphics2D, text: String, wrapLength: Int, x: Int, y: Int) = {
