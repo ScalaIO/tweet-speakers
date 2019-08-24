@@ -15,7 +15,11 @@ object Workshop extends TalkFormat {
 case class Talk(title: String, talk_format: TalkFormat)
 
 case class Profile(name: String, twitter: TwitterAccount, avatar: Avatar) {
-  lazy val label = name + twitter.fold("")(t => s" (@$t)")
+  lazy val formattedName = name.toLowerCase
+    .split(' ')
+    .map(_.capitalize)
+    .mkString(" ")
+  lazy val label = formattedName + twitter.fold("")(t => s" (@$t)")
 }
 
 case class Submission(talk: Talk, profile: Profile, co_presenter_profiles: Seq[Profile])

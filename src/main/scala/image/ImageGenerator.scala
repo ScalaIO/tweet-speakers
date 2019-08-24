@@ -32,13 +32,11 @@ object ImageGenerator {
     drawProfilePicture(g, imageDetails.speaker.picture, imageDetails.coSpeaker.map(_.picture))
     drawScalaIOLogo(g)
     drawTalkTitle(g, imageDetails.talkTitle)
-    drawSpeakerName(g, imageDetails.speaker.formattedName, imageDetails.coSpeaker.map(_.formattedName))
+    drawSpeakerName(g, imageDetails.speaker.name, imageDetails.coSpeaker.map(_.name))
     drawTalkFormat(g, imageDetails.talkFormat.name)
 
     val speakersName =
-      imageDetails.coSpeaker.fold(imageDetails.speaker.formattedName)(
-        co => s"${imageDetails.speaker.formattedName} - ${co.formattedName}"
-      )
+      imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name} - ${co.name}")
 
     ZIO.fromTry(
       Try(

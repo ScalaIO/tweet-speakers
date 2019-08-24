@@ -4,12 +4,7 @@ import java.net.URL
 
 import submission.TalkFormat
 
-case class SpeakerDetails(name: String, picture: URL) {
-  val formattedName = name.toLowerCase
-    .split(' ')
-    .map(_.capitalize)
-    .mkString(" ")
-}
+case class SpeakerDetails(name: String, picture: URL)
 
 case class ImageDetails(
   talkTitle: String,

@@ -65,7 +65,7 @@ object ScalaIOTweets extends App {
         case (speakerUrl, maybeCoSpeakerUrl) =>
           ImageDetails(
             submission.talk.title,
-            SpeakerDetails(submission.profile.name, speakerUrl),
+            SpeakerDetails(submission.profile.formattedName, speakerUrl),
             maybeCoSpeakerUrl.map(url => SpeakerDetails(submission.co_presenter_profiles.head.name, url)),
             submission.talk.talk_format
           )
