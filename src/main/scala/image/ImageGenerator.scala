@@ -41,7 +41,13 @@ object ImageGenerator {
     ZIO.fromTry(
       Try(
         ImageIO
-          .write(img, "png", new File(s"${conf.getString("files.outputImagesDir")}/${speakersName}.png"))
+          .write(
+            img,
+            "png",
+            new File(
+              s"${conf.getString("files.outputImagesDir")}/${speakersName}-${imageDetails.talkTitle.substring(0, 5)}.png"
+            )
+          )
       )
     )
   }
