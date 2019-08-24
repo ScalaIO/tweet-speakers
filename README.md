@@ -13,7 +13,7 @@ Script to publish to twitter speaker annoucements for ScalaIO
 ## Prerequisites
 
  * JDK 8
- * Scala 2.11.+ and 2.12.+
+ * Scala 2.11+
 
 ### Twitter
 
