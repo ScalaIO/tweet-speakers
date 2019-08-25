@@ -14,9 +14,24 @@ object ScalaIOTweets extends App {
 
   private val conf: Config = ConfigFactory.load
   private val speakerPhotosDir = conf.getString("files.speakerPhotosDir")
+
   val acceptedTalks = Stream
     .fromEffect(ZIO.fromEither(Papercall.acceptedTalks()))
     .flatMap(submissions => Stream.fromIterable(submissions))
+    .map(submission => lateCoSpeakers(submission))
+
+  // Co-speakers who have been added after the talk was accepted do not show on PaperCall. We have to deal with them manually
+  def lateCoSpeakers(submission: Submission): Submission = submission.profile.formattedName match {
+    case "Florent Pellet" =>
+      submission.copy(co_presenter_profiles = Seq(Profile("Clément Bouillier", Some("clem_bouillier"), None)))
+    case "Caroline Gaudreau Et Gaël Deest" =>
+      submission.copy(
+        profile = submission.profile.copy(name = "Caroline Gaudreau"),
+        co_presenter_profiles = Seq(Profile("Gaël Deest", Some("gael_deest"), None))
+      )
+    case "Aggelos Biboudis" => submission.copy(co_presenter_profiles = Seq(Profile("Olivier Blanvillain", None, None)))
+    case _                  => submission
+  }
 
   private val kitten = zio.Task.succeed(this.getClass.getClassLoader.getResource("kitten.jpg"))
   val imageDetails = acceptedTalks
