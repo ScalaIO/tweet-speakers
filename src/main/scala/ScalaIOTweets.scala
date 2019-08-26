@@ -24,7 +24,7 @@ object ScalaIOTweets extends App {
   def lateCoSpeakers(submission: Submission): Submission = submission.profile.formattedName match {
     case "Florent Pellet" =>
       submission.copy(co_presenter_profiles = Seq(Profile("Clément Bouillier", Some("clem_bouillier"), None)))
-    case "Caroline Gaudreau Et Gaël Deest" =>
+    case "Caroline Gaudreau" =>
       submission.copy(
         profile = submission.profile.copy(name = "Caroline Gaudreau"),
         co_presenter_profiles = Seq(Profile("Gaël Deest", Some("gael_deest"), None))
