@@ -25,12 +25,19 @@ object ScalaIOTweets extends App {
     case "Florent Pellet" =>
       submission.copy(co_presenter_profiles = Seq(Profile("Clément Bouillier", Some("clem_bouillier"), None)))
     case "Caroline Gaudreau" =>
-      submission.copy(
-        profile = submission.profile.copy(name = "Caroline Gaudreau"),
-        co_presenter_profiles = Seq(Profile("Gaël Deest", Some("gael_deest"), None))
-      )
+      submission.copy(profile = submission.profile.copy(name = "Caroline Gaudreau and Gaël Deest"))
     case "Aggelos Biboudis" => submission.copy(co_presenter_profiles = Seq(Profile("Olivier Blanvillain", None, None)))
-    case _                  => submission
+    case "Vincent Brule" =>
+      submission.copy(
+        co_presenter_profiles = Seq(
+          Profile(
+            "Xavier Tordoir",
+            Some("xtordoir"),
+            Some("https://secure.gravatar.com/avatar/f45f19c580c97062b3282d8cfec24863?s=500")
+          )
+        )
+      )
+    case _ => submission
   }
 
   private val kitten = zio.Task.succeed(this.getClass.getClassLoader.getResource("kitten.jpg"))
