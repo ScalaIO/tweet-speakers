@@ -22,34 +22,31 @@ object ImageGenerator {
   private val ratio = 3
   private val h = 267 * ratio
   private val w = 507 * ratio
-  val conf: Config = ConfigFactory.load
+  private val conf: Config = ConfigFactory.load
 
   def of(imageDetails: ImageDetails) = {
-    val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-    val g = img.getGraphics.asInstanceOf[Graphics2D]
+    ZIO
+      .fromTry(Try {
+        val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+        val g = img.getGraphics.asInstanceOf[Graphics2D]
 
-    initializeCanvas(g)
-    drawProfilePicture(g, imageDetails.speaker.picture, imageDetails.coSpeaker.map(_.picture))
-    drawScalaIOLogo(g)
-    drawTalkTitle(g, imageDetails.talkTitle)
-    drawSpeakerName(g, imageDetails.speaker.name, imageDetails.coSpeaker.map(_.name))
-    drawTalkFormat(g, imageDetails.talkFormat.name)
+        initializeCanvas(g)
+        drawProfilePicture(g, imageDetails.speaker.picture, imageDetails.coSpeaker.map(_.picture))
+        drawScalaIOLogo(g)
+        drawTalkTitle(g, imageDetails.talkTitle)
+        drawSpeakerName(g, imageDetails.speaker.name, imageDetails.coSpeaker.map(_.name))
+        drawTalkFormat(g, imageDetails.talkFormat.name)
 
-    val speakersName =
-      imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name} - ${co.name}")
+        val speakersName =
+          imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name} - ${co.name}")
 
-    ZIO.fromTry(
-      Try(
+        val filePath =
+          s"${conf.getString("files.outputImagesDir")}/${speakersName}-${imageDetails.talkTitle.substring(0, 5)}.png"
         ImageIO
-          .write(
-            img,
-            "png",
-            new File(
-              s"${conf.getString("files.outputImagesDir")}/${speakersName}-${imageDetails.talkTitle.substring(0, 5)}.png"
-            )
-          )
-      )
-    )
+          .write(img, "png", new File(filePath))
+        filePath
+      })
+      .mapError(_.toString)
   }
 
   private def initializeCanvas(g: Graphics2D) = {
@@ -135,7 +132,7 @@ object ImageGenerator {
       .foreach { case (line, offset) => g.drawString(line, x, y + offset) }
   }
 
-  def drawTalkFormat(g: Graphics2D, talkFormat: String) = {
+  private def drawTalkFormat(g: Graphics2D, talkFormat: String) = {
     g.setColor(scalaIORed)
     val offsetT = 50
     val (marginH, marginT) = (50, 30)

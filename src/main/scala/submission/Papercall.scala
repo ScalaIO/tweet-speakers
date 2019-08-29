@@ -1,6 +1,8 @@
 package submission
 
 import com.softwaremill.sttp._
+import zio.ZIO
+import zio.stream._
 
 object Papercall {
 
@@ -9,11 +11,20 @@ object Papercall {
   private val conf: Config = ConfigFactory.load
   private val token = conf.getString("papercall.token")
 
-  def acceptedTalks() = {
-    val request = sttp.get(uri"https://www.papercall.io/api/v1/submissions?_token=$token&per_page=100&state=accepted")
-    implicit val backend = HttpURLConnectionBackend()
-    val response = request.send()
+  def acceptedTalks() =
+    Stream
+      .fromEffect(
+        ZIO
+          .fromEither {
+            val request =
+              sttp.get(uri"https://www.papercall.io/api/v1/submissions?_token=$token&per_page=100&state=accepted")
+            implicit val backend: SttpBackend[Id, Nothing] = HttpURLConnectionBackend()
+            request.send().body
+          }
+      )
+      .flatMap(responseToSubmissions)
 
+  private def responseToSubmissions(response: String) = {
     import io.circe.Decoder
     import io.circe.generic.semiauto.deriveDecoder
     import io.circe.parser.decode
@@ -29,7 +40,6 @@ object Papercall {
     implicit val decodeTalk: Decoder[Talk] = deriveDecoder[Talk]
     implicit val decodeSubmission: Decoder[Submission] = deriveDecoder[Submission]
 
-    decode[Seq[Submission]](response.unsafeBody)
+    decode[Seq[Submission]](response).fold(e => Stream.fail(e.toString), Stream.fromIterable)
   }
-
 }
