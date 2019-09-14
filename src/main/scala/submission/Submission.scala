@@ -12,6 +12,10 @@ object Workshop extends TalkFormat {
   override val name: String = "Workshop"
 }
 
+object Keynote extends TalkFormat {
+  override val name: String = "Keynote"
+}
+
 case class Talk(title: String, talk_format: TalkFormat)
 
 case class Profile(name: String, twitter: TwitterAccount, avatar: Avatar) {

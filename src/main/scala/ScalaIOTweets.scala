@@ -8,11 +8,11 @@ import zio.{App, _}
 object ScalaIOTweets extends App {
   override def run(args: List[String]): UIO[Int] = generatedImages.runDrain.fold(_ => 1, _ => 0).asInstanceOf[UIO[Int]]
 
-  val generatedImages: ZStream[Console, Any, String] = Papercall
-    .acceptedTalks()
-    .map(LateCoSpeakers.of)
-    .mapM(imageDetailsFromSubmission)
-    .mapM(ImageGenerator.of)
+  val generatedImages: ZStream[Console, Any, String] =
+    (Papercall.acceptedTalks() ++ Keynotes.submissions)
+      .map(LateCoSpeakers.of)
+      .mapM(imageDetailsFromSubmission)
+      .mapM(ImageGenerator.of)
 
   private def imageDetailsFromSubmission(submission: Submission) =
     for {
