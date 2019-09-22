@@ -16,7 +16,7 @@ object Keynote extends TalkFormat {
   override val name: String = "Keynote"
 }
 
-case class Talk(title: String, talk_format: TalkFormat)
+case class Talk(title: String, description: String, talk_format: TalkFormat)
 
 case class Profile(name: String, twitter: TwitterAccount, avatar: Avatar) {
   lazy val formattedName = name.toLowerCase
@@ -26,4 +26,4 @@ case class Profile(name: String, twitter: TwitterAccount, avatar: Avatar) {
   lazy val label = formattedName + twitter.fold("")(t => s" (@$t)")
 }
 
-case class Submission(talk: Talk, profile: Profile, co_presenter_profiles: Seq[Profile])
+case class Submission(id: Long, talk: Talk, profile: Profile, co_presenter_profiles: Seq[Profile])

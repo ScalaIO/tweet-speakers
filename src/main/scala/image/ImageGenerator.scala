@@ -24,7 +24,7 @@ object ImageGenerator {
   private val w = 507 * ratio
   private val conf: Config = ConfigFactory.load
 
-  def of(imageDetails: ImageDetails) = {
+  def of(imageDetails: SubmissionDetails) = {
     ZIO
       .fromTry(Try {
         val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
@@ -33,15 +33,15 @@ object ImageGenerator {
         initializeCanvas(g)
         drawProfilePicture(g, imageDetails.speaker.picture, imageDetails.coSpeaker.map(_.picture))
         drawScalaIOLogo(g)
-        drawTalkTitle(g, imageDetails.talkTitle)
+        drawTalkTitle(g, imageDetails.talk.title)
         drawSpeakerName(g, imageDetails.speaker.name, imageDetails.coSpeaker.map(_.name))
-        drawTalkFormat(g, imageDetails.talkFormat.name)
+        drawTalkFormat(g, imageDetails.talk.format.name)
 
         val speakersName =
           imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name} - ${co.name}")
 
         val filePath =
-          s"${conf.getString("files.outputImagesDir")}/${speakersName}-${imageDetails.talkTitle.substring(0, 5)}.png"
+          s"${conf.getString("files.outputImagesDir")}/${speakersName}-${imageDetails.talk.title.substring(0, 5)}.png"
         ImageIO
           .write(img, "png", new File(filePath))
         filePath
