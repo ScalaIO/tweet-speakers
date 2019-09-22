@@ -26,4 +26,4 @@ case class Profile(name: String, twitter: TwitterAccount, avatar: Avatar) {
   lazy val label = formattedName + twitter.fold("")(t => s" (@$t)")
 }
 
-case class Submission(id: Long, talk: Talk, profile: Profile, co_presenter_profiles: Seq[Profile])
+case class Submission(id: Long, talk: Talk, profile: Profile, co_presenter_profiles: Seq[Profile], tags: Seq[String])

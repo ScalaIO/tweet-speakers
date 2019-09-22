@@ -1,6 +1,6 @@
 import java.net.URL
 
-import image.{SpeakerDetails, SubmissionDetails, TalkDetails}
+import image._
 import io.circe.Printer
 import submission.{Keynote, Talk, TalkFormat, Workshop}
 import zio.console.putStrLn
@@ -21,6 +21,10 @@ object ScalaIOSubmissions extends App {
     case Talk     => Json.fromString("Talk")
     case Workshop => Json.fromString("Workshop")
     case Keynote  => Json.fromString("Keynote")
+  }
+  implicit val encodeLanguage: Encoder[Language] = Encoder.instance {
+    case English => Json.fromString("\uD83C\uDDEC\uD83C\uDDE7")
+    case French  => Json.fromString("\uD83C\uDDEB\uD83C\uDDF7")
   }
   implicit val encodeTalkDetails: Encoder[TalkDetails] = deriveEncoder
   implicit val encodeSubmissionDetails: Encoder[SubmissionDetails] = deriveEncoder

@@ -38,6 +38,7 @@ object Papercall {
       case "Short Talk (20 minutes)" => Talk
     }
     implicit val decodeTalk: Decoder[Talk] = deriveDecoder[Talk]
+
     implicit val decodeSubmission: Decoder[Submission] = deriveDecoder[Submission]
 
     decode[Seq[Submission]](response).fold(e => Stream.fail(e.toString), Stream.fromIterable)
