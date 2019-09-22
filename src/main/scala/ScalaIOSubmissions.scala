@@ -13,7 +13,7 @@ object ScalaIOSubmissions extends App {
 
   implicit val encodeUrl: Encoder[URL] = (a: URL) => {
     if (a.getProtocol.contains("http")) Json.fromString(a.toString)
-    else Json.fromString(s"/assets/${a.getPath.split("/").last}")
+    else Json.fromString(s"/assets/speakers/${a.getPath.split("/").last}")
   }
   implicit val encodeSpeakerDetails: Encoder[SpeakerDetails] = deriveEncoder
 
