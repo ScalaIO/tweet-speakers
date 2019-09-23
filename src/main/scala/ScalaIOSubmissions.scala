@@ -12,8 +12,8 @@ object ScalaIOSubmissions extends App {
   import io.circe.{Encoder, Json}
 
   implicit val encodeUrl: Encoder[URL] = (a: URL) => {
-    if (a.getProtocol.contains("http")) Json.fromString(a.toString)
-    else Json.fromString(s"/assets/speakers/${a.getPath.split("/").last}")
+    if (a.getProtocol.contains("http")) Json.fromString(a.toString.replace("http:", "https:"))
+    else Json.fromString(a.getPath.split("/").last)
   }
   implicit val encodeSpeakerDetails: Encoder[SpeakerDetails] = deriveEncoder
 
@@ -33,7 +33,7 @@ object ScalaIOSubmissions extends App {
   override def run(args: List[String]): UIO[Int] =
     ScalaIOSubmissionDetails.details.runCollect
       .map(details => details.asJson.pretty(printer))
-      .tap(x => putStrLn(x))
+      .tap(putStrLn)
       .fold(_ => 1, _ => 0)
       .asInstanceOf[UIO[Int]]
 }

@@ -26,8 +26,10 @@ object ScalaIOSubmissionDetails {
           submission.talk.talk_format,
           submission.tags.flatMap(tagToLanguage)
         ),
-        SpeakerDetails(submission.profile.formattedName, profiles._1),
-        profiles._2.map(url => SpeakerDetails(submission.co_presenter_profiles.head.name, url))
+        Seq(
+          Some(SpeakerDetails(submission.profile.formattedName, profiles._1)),
+          profiles._2.map(url => SpeakerDetails(submission.co_presenter_profiles.head.name, url))
+        ).flatten
       )
 
   private def tagToLanguage(x: String) = x match {

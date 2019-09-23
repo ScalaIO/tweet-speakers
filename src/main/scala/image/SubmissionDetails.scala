@@ -14,4 +14,4 @@ object French extends Language
 
 case class TalkDetails(title: String, description: String, format: TalkFormat, languages: Seq[Language])
 
-case class SubmissionDetails(id: Long, talk: TalkDetails, speaker: SpeakerDetails, coSpeaker: Option[SpeakerDetails])
+case class SubmissionDetails(id: Long, talk: TalkDetails, speakers: Seq[SpeakerDetails])

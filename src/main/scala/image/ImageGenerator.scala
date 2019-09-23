@@ -31,14 +31,15 @@ object ImageGenerator {
         val g = img.getGraphics.asInstanceOf[Graphics2D]
 
         initializeCanvas(g)
-        drawProfilePicture(g, imageDetails.speaker.picture, imageDetails.coSpeaker.map(_.picture))
+        drawProfilePicture(g, imageDetails.speakers.head.picture, imageDetails.speakers.tail.headOption.map(_.picture))
         drawScalaIOLogo(g)
         drawTalkTitle(g, imageDetails.talk.title)
-        drawSpeakerName(g, imageDetails.speaker.name, imageDetails.coSpeaker.map(_.name))
+        drawSpeakerName(g, imageDetails.speakers.head.name, imageDetails.speakers.tail.headOption.map(_.name))
         drawTalkFormat(g, imageDetails.talk.format.name)
 
         val speakersName =
-          imageDetails.coSpeaker.fold(imageDetails.speaker.name)(co => s"${imageDetails.speaker.name} - ${co.name}")
+          imageDetails.speakers.tail.headOption
+            .fold(imageDetails.speakers.head.name)(co => s"${imageDetails.speakers.head.name} - ${co.name}")
 
         val filePath =
           s"${conf.getString("files.outputImagesDir")}/${speakersName}-${imageDetails.talk.title.substring(0, 5)}.png"
