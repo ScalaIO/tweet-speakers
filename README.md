@@ -35,6 +35,7 @@ export TWITTER_ACCESS_TOKEN_KEY='my-access-key'
 export TWITTER_ACCESS_TOKEN_SECRET='my-access-secret'
 export PAPERCALL_TOKEN='my-papercall-token'
 export OUTPUT_DIR='/output/dir/for/images'
+export OUTPUT_PHOTOS_DIR='/output/dir/for/photos'
 export PHOTOS_DIR='/input/dir/for/speaker/photos'
 ```
 
@@ -55,6 +56,7 @@ papercall {
 }
 files {
   outputImagesDir = "/output/dir/for/images"
+  outputPhotosDir = "/output/dir/for/photos"
   speakerPhotosDir = "/input/dir/for/speaker/photos"
 }
 ```

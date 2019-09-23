@@ -31,7 +31,9 @@ object ScalaIOSubmissions extends App {
   val printer = Printer.noSpaces.copy(dropNullValues = true)
 
   override def run(args: List[String]): UIO[Int] =
-    ScalaIOSubmissionDetails.details.runCollect
+    ScalaIOSubmissionDetails.details
+      .mapM(ImageCopy.of)
+      .runCollect
       .map(details => details.asJson.pretty(printer))
       .tap(putStrLn)
       .fold(_ => 1, _ => 0)

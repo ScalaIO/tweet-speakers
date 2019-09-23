@@ -6,7 +6,7 @@ object LateCoSpeakers {
     case "Florent Pellet" =>
       submission.copy(co_presenter_profiles = Seq(Profile("Clément Bouillier", Some("clem_bouillier"), None)))
     case "Caroline Gaudreau" =>
-      submission.copy(profile = submission.profile.copy(name = "Caroline Gaudreau and Gaël Deest"))
+      submission.copy(co_presenter_profiles = Seq(Profile("Gaël Deest", Some("gael_deest"), None)))
     case "Aggelos Biboudis" => submission.copy(co_presenter_profiles = Seq(Profile("Olivier Blanvillain", None, None)))
     case "Vincent Brule" =>
       submission.copy(
