@@ -1,6 +1,7 @@
 import image._
 import submission.{Keynotes, LateCoSpeakers, Papercall, Submission}
-import zio.console.Console
+import twitter.Tweet
+import zio.console.{Console, putStrLn}
 import zio.stream.ZStream
 
 object ScalaIOSubmissionDetails {
@@ -11,25 +12,27 @@ object ScalaIOSubmissionDetails {
       .mapM(detailsFromSubmission)
 
   private def detailsFromSubmission(submission: Submission) =
-    for {
-      /*_ <- putStrLn(submission.toString)
-      _ <- putStrLn(
-        Tweet(submission.talk.title, submission.profile, submission.co_presenter_profiles.headOption).message
-      )*/
-      profiles <- ProfileImageURL.speakerProfileUrls(submission)
-    } yield
-      SubmissionDetails(
-        submission.id,
-        TalkDetails(
-          submission.talk.title,
-          submission.talk.description,
-          submission.talk.talk_format,
-          submission.tags.flatMap(tagToLanguage)
-        ),
-        Seq(
-          Some(SpeakerDetails(submission.profile.formattedName, profiles._1)),
-          profiles._2.map(url => SpeakerDetails(submission.co_presenter_profiles.head.name, url))
-        ).flatten
+    ProfileImageURL
+      .speakerProfileUrls(submission)
+      .tap(
+        _ =>
+          putStrLn(
+            Tweet(submission.talk.title, submission.profile, submission.co_presenter_profiles.headOption).message
+        )
+      )
+      .runCollect
+      .map(
+        speakerDetails =>
+          SubmissionDetails(
+            submission.id,
+            TalkDetails(
+              submission.talk.title,
+              submission.talk.description,
+              submission.talk.talk_format,
+              submission.tags.flatMap(tagToLanguage)
+            ),
+            speakerDetails
+        )
       )
 
   private def tagToLanguage(x: String) = x match {

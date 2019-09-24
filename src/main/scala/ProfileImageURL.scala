@@ -1,8 +1,10 @@
 import java.net.URL
 
 import com.typesafe.config.{Config, ConfigFactory}
+import image.SpeakerDetails
 import submission.{Avatar, Profile, Submission, TwitterAccount}
 import twitter.Twitter
+import zio.stream.ZStream
 import zio.{IO, ZIO}
 
 import scala.reflect.io.File
@@ -13,8 +15,9 @@ object ProfileImageURL {
   private val kitten = zio.Task.succeed(this.getClass.getClassLoader.getResource("kitten.jpg"))
 
   def speakerProfileUrls(submission: Submission) =
-    profileUrl(submission.profile) &&&
-      ZIO.fromOption(submission.co_presenter_profiles.headOption).flatMap(profileUrl).option
+    ZStream
+      .fromIterable(Seq(submission.profile) ++ submission.co_presenter_profiles)
+      .mapM(profile => profileUrl(profile).map(url => SpeakerDetails(profile.formattedName, url)))
 
   private def profileUrl(profile: Profile): IO[Unit, URL] =
     speakerImageFromLocalDirectory(profile.name) <>
