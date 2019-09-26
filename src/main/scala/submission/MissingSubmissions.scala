@@ -2,7 +2,7 @@ package submission
 
 import zio.stream.ZStream
 
-object Keynotes {
+object MissingSubmissions {
   val submissions = ZStream.fromIterable(
     Seq(
       Submission(
@@ -32,6 +32,30 @@ object Keynotes {
         Profile("Oli M", Some("Oli_kitty"), None),
         Seq.empty,
         Seq("\uD83C\uDDEC\uD83C\uDDE7")
+      ),
+      Submission(
+        3,
+        Talk(
+          "Comment faire des tests de charge avec Gatling ?",
+          "Découvrez la problématique des tests de charge, et apprenez à la résoudre en Scala avec l’outil Open-Source Gatling",
+          Workshop
+        ),
+        Profile("Cédric Cousseran", None, None),
+        Seq(Profile("Thomas Petillot", None, None)),
+        Seq("\uD83C\uDDEB\uD83C\uDDF7", "\uD83C\uDDEC\uD83C\uDDE7")
+      ),
+      Submission(
+        4,
+        Talk(
+          "Dans s'cas là",
+          """Lors de cet atelier, nous vous proposons de revenir sur des fondamentaux de Scala en nous intéressant tout particulièrement aux case class, au Pattern Matching, et pour finir aux Collections. L’atelier sera organisé autour d’exercices, mettant en jeu ces différentes notions et leurs subtilités.
+						|
+						|Pas besoin de connaître les monades, monoïde ou autres, des connaissances en Java vous suffiront !""".stripMargin,
+          Workshop
+        ),
+        Profile("Jean Helou", Some("jeanhelou"), None),
+        Seq(Profile("Daniel Lovera", Some("dan_lovera"), None)),
+        Seq("\uD83C\uDDEB\uD83C\uDDF7")
       ),
     )
   )
