@@ -15,11 +15,11 @@ object LateCoSpeakers {
             "Xavier Tordoir",
             Some("xtordoir"),
             Some("https://secure.gravatar.com/avatar/f45f19c580c97062b3282d8cfec24863?s=500")
-          ),
-          Profile("Maude Cahuet", Some("maude_cahuet"), None),
-          Profile("Vladimir Bodnartchouk", None, None),
+          )
         )
       )
+    case "Maude Cahuet" =>
+      submission.copy(co_presenter_profiles = Seq(Profile("Vladimir Bodnartchouk", None, None)))
     case _ => submission
   }
 
