@@ -16,7 +16,23 @@ object Keynote extends TalkFormat {
   override val name: String = "Keynote"
 }
 
-case class Talk(title: String, description: String, talk_format: TalkFormat)
+sealed trait AudienceLevel {
+  val name: String
+}
+
+object Beginner extends AudienceLevel {
+  override val name: String = "Beginner"
+}
+
+object Intermediate extends AudienceLevel {
+  override val name: String = "Intermediate"
+}
+
+object All extends AudienceLevel {
+  override val name: String = "All"
+}
+
+case class Talk(title: String, description: String, talk_format: TalkFormat, audience_level: AudienceLevel)
 
 case class Profile(name: String, twitter: TwitterAccount, avatar: Avatar) {
   lazy val formattedName = name.toLowerCase

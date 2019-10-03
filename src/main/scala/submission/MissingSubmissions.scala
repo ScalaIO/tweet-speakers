@@ -10,7 +10,8 @@ object MissingSubmissions {
         Talk(
           "FP: The Good, the Bad and the Ugly",
           "You are about to fall in love with Functional Programming, if not already. You are going to learn the good parts that are going to make your day-to-day life easier. But since nobody is perfect - not even FP -, you are also going to see its bad and ugly parts, and you'll discover how to deal with them: from learning challenges to performance issues on the JVM. ",
-          Keynote
+          Keynote,
+          All
         ),
         Profile("Daniela Sfregola", Some("DanielaSfregola"), None),
         Seq.empty,
@@ -27,7 +28,8 @@ object MissingSubmissions {
 						|However, as we become more senior in our fields, we tend to assume we know it all and stop asking as many questions. But do we ever stop wondering, challenging ourselves, doubting things, or searching for answers?
 						|
 						|In this keynote, Oli will share insights she's gained while conducting podcast interviews with individuals from a variety of sectors in the Scala community. She'll also discuss how she's incorporated these principles into asking the right questions, a skill that helps her be an effective technical consultant.""".stripMargin,
-          Keynote
+          Keynote,
+          All
         ),
         Profile("Oli M", Some("Oli_kitty"), None),
         Seq.empty,
@@ -38,7 +40,8 @@ object MissingSubmissions {
         Talk(
           "Comment faire des tests de charge avec Gatling ?",
           "Découvrez la problématique des tests de charge, et apprenez à la résoudre en Scala avec l’outil Open-Source Gatling",
-          Workshop
+          Workshop,
+          All
         ),
         Profile("Cédric Cousseran", None, None),
         Seq(Profile("Thomas Petillot", None, None)),
@@ -51,7 +54,8 @@ object MissingSubmissions {
           """Lors de cet atelier, nous vous proposons de revenir sur des fondamentaux de Scala en nous intéressant tout particulièrement aux case class, au Pattern Matching, et pour finir aux Collections. L’atelier sera organisé autour d’exercices, mettant en jeu ces différentes notions et leurs subtilités.
 						|
 						|Pas besoin de connaître les monades, monoïde ou autres, des connaissances en Java vous suffiront !""".stripMargin,
-          Workshop
+          Workshop,
+          Beginner
         ),
         Profile("Jean Helou", Some("jeanhelou"), None),
         Seq(Profile("Daniel Lovera", Some("dan_lovera"), None)),

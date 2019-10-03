@@ -29,7 +29,8 @@ object ScalaIOSubmissionDetails {
               submission.talk.title,
               submission.talk.description,
               submission.talk.talk_format,
-              submission.tags.flatMap(tagToLanguage)
+              submission.tags.flatMap(tagToLanguage),
+              submission.talk.audience_level
             ),
             speakerDetails
         )

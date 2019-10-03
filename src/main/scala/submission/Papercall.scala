@@ -37,6 +37,11 @@ object Papercall {
       case "Talk (45 minutes)"       => Talk
       case "Short Talk (20 minutes)" => Talk
     }
+    implicit val decodeLevel: Decoder[AudienceLevel] = Decoder.decodeString.map {
+      case "All"          => All
+      case "Beginner"     => Beginner
+      case "Intermediate" => Intermediate
+    }
     implicit val decodeTalk: Decoder[Talk] = deriveDecoder[Talk]
 
     implicit val decodeSubmission: Decoder[Submission] = deriveDecoder[Submission]
