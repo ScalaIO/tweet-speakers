@@ -19,7 +19,13 @@ object LateCoSpeakers {
         )
       )
     case "Maude Cahuet" =>
-      submission.copy(co_presenter_profiles = Seq(Profile("Vladimir Bodnartchouk", None, None)))
+      submission.copy(
+        profile = Profile(
+          "Vincent Brule",
+          Some("BruleVincent"),
+          Some("https://papercallio-production.s3.amazonaws.com/uploads/user/avatar/51055/Vincent_B.jpg")
+        )
+      )
     case _ => submission
   }
 
