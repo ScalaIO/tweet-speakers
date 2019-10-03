@@ -1,5 +1,5 @@
 import image._
-import submission.{LateCoSpeakers, MissingSubmissions, Papercall, Submission}
+import submission.{Ammendments, MissingSubmissions, Papercall, Submission}
 import twitter.Tweet
 import zio.console.{Console, putStrLn}
 import zio.stream.ZStream
@@ -8,7 +8,7 @@ object ScalaIOSubmissionDetails {
 
   val details: ZStream[Console, Any, SubmissionDetails] =
     (Papercall.acceptedTalks() ++ MissingSubmissions.submissions)
-      .map(LateCoSpeakers.of)
+      .map(Ammendments.of)
       .mapM(detailsFromSubmission)
 
   private def detailsFromSubmission(submission: Submission) =

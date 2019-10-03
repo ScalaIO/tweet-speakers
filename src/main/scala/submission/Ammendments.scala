@@ -1,6 +1,6 @@
 package submission
 
-object LateCoSpeakers {
+object Ammendments {
   // Co-speakers who have been added after the talk was accepted do not show on PaperCall. We have to deal with them manually
   def of(submission: Submission): Submission = submission.profile.formattedName match {
     case "Florent Pellet" =>
@@ -26,6 +26,9 @@ object LateCoSpeakers {
           Some("https://papercallio-production.s3.amazonaws.com/uploads/user/avatar/51055/Vincent_B.jpg")
         )
       )
+    case "Harrison Cheng" => submission.copy(talk = submission.talk.copy(audience_level = Beginner))
+    case "Jonathan Winandy" =>
+      submission.copy(talk = submission.talk.copy(title = "L'incroyable efficacité de l'unification des logs !"))
     case _ => submission
   }
 
