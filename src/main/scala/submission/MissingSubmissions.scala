@@ -61,6 +61,13 @@ object MissingSubmissions {
         Seq(Profile("Daniel Lovera", Some("dan_lovera"), None)),
         Seq("\uD83C\uDDEB\uD83C\uDDF7")
       ),
+      Submission(
+        5,
+        Talk("To be announced", "To be announced", Talk, All),
+        Profile("", None, None),
+        Seq.empty,
+        Seq.empty
+      )
     )
   )
 }
