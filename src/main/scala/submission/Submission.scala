@@ -34,7 +34,14 @@ object All extends AudienceLevel {
 
 case class Talk(title: String, description: String, talk_format: TalkFormat, audience_level: AudienceLevel)
 
-case class Profile(name: String, twitter: TwitterAccount, avatar: Avatar) {
+case class Profile(
+  name: String,
+  twitter: TwitterAccount = None,
+  avatar: Avatar = None,
+  bio: Biography = None,
+  company: Company = None,
+  url: Url = None
+) {
   lazy val formattedName = name.toLowerCase
     .split(' ')
     .map(_.capitalize)

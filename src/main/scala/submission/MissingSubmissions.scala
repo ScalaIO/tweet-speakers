@@ -3,6 +3,8 @@ package submission
 import zio.stream.ZStream
 
 object MissingSubmissions {
+  val frenchFlagEmoji = "\uD83C\uDDEB\uD83C\uDDF7"
+  val ukFlagEmoji = "\uD83C\uDDEC\uD83C\uDDE7"
   val submissions = ZStream.fromIterable(
     Seq(
       Submission(
@@ -13,9 +15,9 @@ object MissingSubmissions {
           Keynote,
           All
         ),
-        Profile("Daniela Sfregola", Some("DanielaSfregola"), None),
+        Profile("Daniela Sfregola", Some("DanielaSfregola")),
         Seq.empty,
-        Seq("\uD83C\uDDEC\uD83C\uDDE7")
+        Seq(ukFlagEmoji)
       ),
       Submission(
         2,
@@ -31,9 +33,9 @@ object MissingSubmissions {
           Keynote,
           All
         ),
-        Profile("Oli M", Some("Oli_kitty"), None),
+        Profile("Oli M", Some("Oli_kitty")),
         Seq.empty,
-        Seq("\uD83C\uDDEC\uD83C\uDDE7")
+        Seq(ukFlagEmoji)
       ),
       Submission(
         3,
@@ -43,9 +45,9 @@ object MissingSubmissions {
           Workshop,
           All
         ),
-        Profile("Cédric Cousseran", None, None),
-        Seq(Profile("Thomas Petillot", None, None)),
-        Seq("\uD83C\uDDEB\uD83C\uDDF7", "\uD83C\uDDEC\uD83C\uDDE7")
+        Profile("Cédric Cousseran"),
+        Seq(Profile("Thomas Petillot")),
+        Seq(ukFlagEmoji, frenchFlagEmoji)
       ),
       Submission(
         4,
@@ -57,16 +59,21 @@ object MissingSubmissions {
           Workshop,
           Beginner
         ),
-        Profile("Jean Helou", Some("jeanhelou"), None),
-        Seq(Profile("Daniel Lovera", Some("dan_lovera"), None)),
-        Seq("\uD83C\uDDEB\uD83C\uDDF7")
+        Profile("Jean Helou", Some("jeanhelou")),
+        Seq(Profile("Daniel Lovera", Some("dan_lovera"))),
+        Seq(ukFlagEmoji, frenchFlagEmoji)
       ),
       Submission(
         5,
-        Talk("To be announced", "To be announced", Talk, All),
-        Profile("", None, None),
+        Talk(
+          "ZIO Chunk: A Fast, Pure Alternative to Arrays",
+          "Arrays are fast and don’t box primitive values, but due to class tag requirements and mutability, they are painful to use and don’t integrate well into functional code. In this  presentation, Aleksandra A Holubitska introduces the audience to Chunk, a data type in ZIO that’s designed to be friendly to use, immutable, and high-performance. Learn more about how you can replace usage of arrays in your application with this new high-performance data type that powers ZIO Streams and other libraries in the ZIO ecosystem.",
+          Talk,
+          All
+        ),
+        Profile("Aleksandra A Holubitska", Some("oleksandra_a")),
         Seq.empty,
-        Seq.empty
+        Seq(ukFlagEmoji)
       )
     )
   )

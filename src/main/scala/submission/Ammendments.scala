@@ -29,6 +29,11 @@ object Ammendments {
     case "Harrison Cheng" => submission.copy(talk = submission.talk.copy(audience_level = Beginner))
     case "Jonathan Winandy" =>
       submission.copy(talk = submission.talk.copy(title = "L'incroyable efficacité de l'unification des logs !"))
+    case "Francois Armand" =>
+      submission.copy(
+        talk = submission.talk
+          .copy(title = "On a porté Rudder sur ZIO - Gestion systématique des erreurs dans vos applications")
+      )
     case _ => submission
   }
 

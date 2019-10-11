@@ -2,9 +2,16 @@ package image
 
 import java.net.URL
 
-import submission.{AudienceLevel, TalkFormat}
+import submission._
 
-case class SpeakerDetails(name: String, picture: URL)
+case class SpeakerDetails(
+  name: String,
+  picture: URL,
+  twitter: TwitterAccount,
+  bio: Biography,
+  company: Company,
+  url: Url
+)
 
 sealed trait Language
 

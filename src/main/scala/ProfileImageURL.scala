@@ -17,7 +17,13 @@ object ProfileImageURL {
   def speakerProfileUrls(submission: Submission) =
     ZStream
       .fromIterable(Seq(submission.profile) ++ submission.co_presenter_profiles)
-      .mapM(profile => profileUrl(profile).map(url => SpeakerDetails(profile.formattedName, url)))
+      .mapM(
+        profile =>
+          profileUrl(profile).map(
+            url =>
+              SpeakerDetails(profile.formattedName, url, profile.twitter, profile.bio, profile.company, profile.url)
+        )
+      )
 
   private def profileUrl(profile: Profile): IO[Unit, URL] =
     speakerImageFromLocalDirectory(profile.name) <>
