@@ -34,6 +34,12 @@ object Ammendments {
         talk = submission.talk
           .copy(title = "On a porté Rudder sur ZIO - Gestion systématique des erreurs dans vos applications")
       )
+    case "Tankoua Stéphane" =>
+      submission.copy(
+        profile = submission.profile.copy(name = "Stéphane Tankoua"),
+        co_presenter_profiles =
+          submission.co_presenter_profiles.map(profile => profile.copy(name = profile.name.replace("Calves", "Calvès")))
+      )
     case _ => submission
   }
 
