@@ -1,10 +1,19 @@
+import java.io.{File, PrintWriter}
 import java.net.URL
 
+import com.typesafe.config.{Config, ConfigFactory}
 import image._
 import io.circe.Printer
 import submission._
-import zio.console.putStrLn
-import zio.{App, _}
+import zio.{App, ZIO, _}
+import zio._
+
+import scala.sys.process._
+import scala.util.Try
+import zio.ZIO
+
+import scala.sys.process._
+import scala.util.Try
 
 object ScalaIOSubmissions extends App {
   import io.circe.generic.semiauto._
@@ -35,12 +44,23 @@ object ScalaIOSubmissions extends App {
   implicit val encodeSubmissionDetails: Encoder[SubmissionDetails] = deriveEncoder
   val printer = Printer.noSpaces.copy(dropNullValues = true)
 
+  private val conf: Config = ConfigFactory.load
+
+  private def openFile() = Task(new PrintWriter(new File(conf.getString("files.outputSubmissions"))))
+  private def closeFile(printWriter: PrintWriter) = UIO(printWriter.close())
+  private def writeContent(writer: PrintWriter, json: String) = Task.effect(writer.print(json))
+
   override def run(args: List[String]): UIO[Int] =
     ScalaIOSubmissionDetails.details
       .mapM(ImageCopy.of)
       .runCollect
       .map(details => details.asJson.pretty(printer))
-      .tap(putStrLn)
+      .tap(
+        json =>
+          openFile().bracket(closeFile) { writer =>
+            writeContent(writer, json)
+        }
+      )
       .fold(_ => 1, _ => 0)
       .asInstanceOf[UIO[Int]]
 }

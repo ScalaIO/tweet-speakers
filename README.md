@@ -37,6 +37,7 @@ export PAPERCALL_TOKEN='my-papercall-token'
 export OUTPUT_DIR='/output/dir/for/images'
 export OUTPUT_PHOTOS_DIR='/output/dir/for/photos'
 export PHOTOS_DIR='/input/dir/for/speaker/photos'
+export SUBMISSIONS_FILE='/output/file/for/submissions.json'
 ```
 
 You can also add them to your configuration file, usually called `application.conf`:
@@ -58,6 +59,7 @@ files {
   outputImagesDir = "/output/dir/for/images"
   outputPhotosDir = "/output/dir/for/photos"
   speakerPhotosDir = "/input/dir/for/speaker/photos"
+  outputSubmissions = "/output/file/for/submissions.json"
 }
 ```
 
