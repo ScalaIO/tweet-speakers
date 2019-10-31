@@ -74,6 +74,13 @@ object MissingSubmissions {
         Profile("Aleksandra A Holubitska", Some("oleksandra_a")),
         Seq.empty,
         Seq(ukFlagEmoji)
+      ),
+      Submission(
+        6,
+        Talk("Closing words", "Some closing words from the staff", Keynote, All),
+        Profile("Staff", None),
+        Seq.empty,
+        Seq(ukFlagEmoji, frenchFlagEmoji)
       )
     )
   )
