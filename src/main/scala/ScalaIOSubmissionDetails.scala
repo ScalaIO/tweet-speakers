@@ -1,7 +1,6 @@
 import image._
 import submission.{Ammendments, MissingSubmissions, Papercall, Submission}
-import twitter.Tweet
-import zio.console.{Console, putStrLn}
+import zio.console.Console
 import zio.stream.ZStream
 
 object ScalaIOSubmissionDetails {
@@ -14,12 +13,6 @@ object ScalaIOSubmissionDetails {
   private def detailsFromSubmission(submission: Submission) =
     ProfileImageURL
       .speakerProfileUrls(submission)
-      .tap(
-        _ =>
-          putStrLn(
-            Tweet(submission.talk.title, submission.profile, submission.co_presenter_profiles.headOption).message
-        )
-      )
       .runCollect
       .map(
         speakerDetails =>

@@ -1,10 +1,7 @@
 package twitter
 
-import submission.Profile
+import image.SpeakerDetails
 
-case class Tweet(title: String, speaker: Profile, coSpeaker: Option[Profile]) {
-  lazy val message = {
-    val andCo = coSpeaker.fold("")(co => s" and ${co.label}")
-    '"' + title + '"' + s" by ${speaker.label}$andCo will be presented at #ScalaIO19"
-  }
+case class Tweet(title: String, speakers: Seq[SpeakerDetails]) {
+  lazy val message = '"' + title + '"' + s" by ${speakers.map(speaker => speaker.name).mkString(" and ")} will be presented at #ScalaIO19"
 }

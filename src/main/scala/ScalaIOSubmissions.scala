@@ -5,15 +5,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import image._
 import io.circe.Printer
 import submission._
-import zio.{App, ZIO, _}
-import zio._
-
-import scala.sys.process._
-import scala.util.Try
-import zio.ZIO
-
-import scala.sys.process._
-import scala.util.Try
+import zio.{App, _}
 
 object ScalaIOSubmissions extends App {
   import io.circe.generic.semiauto._
