@@ -1,3 +1,12 @@
+# :warning: Repository Archived :warning:
+
+---
+
+## Attention Contributors and Users
+
+This repository is now **archived** and **no longer actively maintained**
+
+
 # scalaio-speakers
 
 Script to publish to twitter speaker annoucements for ScalaIO
